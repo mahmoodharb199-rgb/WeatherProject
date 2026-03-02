@@ -1,30 +1,36 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import CloudIcon from "@mui/icons-material/Cloud";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import moment from "moment";
-import { useTranslation } from 'react-i18next';
 import "moment/locale/ar";
+import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchWeather } from "./WeatherApiSlice";
 
-moment.locale('ar');
-// 🎨 Theme
+moment.locale("ar");
+
 const theme = createTheme({
   typography: {
     fontFamily: "IBM Plex Sans Arabic, sans-serif",
   },
 });
 
-let CancelAxsios = null;
-
 function App() {
+  const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
+  
+
+  const weatherData = useSelector((state) => state.weather.weatherdata);
+  const isLoading = useSelector((state) => state.weather.isloading);
+
   const [dateandtime, setDateandtime] = useState("");
-  const [langauge, setLanguage] = useState('ar');
+  const [language, setLanguage] = useState("ar");
   const [temp, setTemp] = useState({
     number: null,
     description: "",
@@ -33,76 +39,34 @@ function App() {
     icon: null,
   });
 
-  function handleLanguageClick(){
-    if(langauge === 'en'){
-      setLanguage('ar');
-       i18n.changeLanguage('ar');
-       moment.locale('ar');
-    }
-    else{
-      setLanguage('en');
-       i18n.changeLanguage('en');
-       moment.locale('en');
-
-    }
-}
-   
-   useEffect(()=>{
-      i18n.changeLanguage('ar');
-   },[])
+  function handleLanguageClick() {
+    const newLang = language === "en" ? "ar" : "en";
+    setLanguage(newLang);
+    i18n.changeLanguage(newLang);
+    moment.locale(newLang);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDateandtime(moment().format("MMMM Do YYYY, h:mm:ss a"));
     }, );
-
     return () => clearInterval(interval);
   }, []);
 
-  // Weather useEffect
   useEffect(() => {
-    axios
-      .get(
-        "https://api.openweathermap.org/data/2.5/weather?lat=31.9539&lon=35.9106&appid=c1f913999115e2fccfaed49c5b3cd31c",
-        {
-          cancelToken: new axios.CancelToken((c) => {
-            CancelAxsios = c;
-          }),
-        }
-      )
-      .then(function (response) {
-        const responsetemp = Math.round(response.data.main.temp - 273.15);
-        const responsemin = Math.round(response.data.main.temp_min - 273.15);
-        const responsetmax = Math.round(response.data.main.temp_max - 273.15);
-        const responsetdescription = response.data.weather[0].description;
-        const responseticon = response.data.weather[0].icon;
+    dispatch(fetchWeather());
+  }, [dispatch]);
 
-        setTemp({
-          number: responsetemp,
-          description: responsetdescription,
-          min: responsemin,
-          max: responsetmax,
-          icon: `https://openweathermap.org/img/wn/${responseticon}@2x.png`,
-        });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    return () => {
-      if (CancelAxsios) {
-        console.log("Canceling Axios Request...");
-        CancelAxsios();
-      }
-    };
-  }, []);
+  useEffect(() => {
+    if (weatherData && Object.keys(weatherData).length > 0) {
+      setTemp(weatherData);
+    }
+  }, [weatherData]);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
       <Container maxWidth="sm">
-        {/* Center Screen */}
         <div
           style={{
             height: "100vh",
@@ -112,9 +76,8 @@ function App() {
             flexDirection: "column",
           }}
         >
-          {/* Card */}
           <div
-          dir={langauge === 'en' ? 'ltr' : 'rtl'}
+            dir={language === "en" ? "ltr" : "rtl"}
             style={{
               background: "rgb(28 52 91 / 36%)",
               color: "white",
@@ -124,55 +87,48 @@ function App() {
               width: "100%",
             }}
           >
-            {/* Header */}
             <div
-            
-            dir={langauge === 'en' ? 'ltr' : 'rtl'}
-
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-              }}
+              dir={language === "en" ? "ltr" : "rtl"}
+              style={{ display: "flex", alignItems: "flex-end" }}
             >
               <Typography variant="h1" sx={{ mr: 2 }}>
-                {t('Amman')}
+                {t("Amman")}
               </Typography>
-
-              <Typography variant="h5" sx={{marginRight:'20px'}} >{dateandtime}</Typography>
+              <Typography variant="h5" sx={{ marginRight: "20px" }}>
+                {dateandtime}
+              </Typography>
             </div>
 
             <hr />
 
-            {/* Temperature Section */}
             <div
-          dir={langauge === 'en' ? 'ltr' : 'rtl'}
+              dir={language === "en" ? "ltr" : "rtl"}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
-              {/* Right Side — Text */}
               <div style={{ textAlign: "right" }}>
-                
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="h1">{temp.number}°C</Typography>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {isLoading && !temp.number ? (
+                    <CircularProgress sx={{ color: "white", mr: 2 }} />
+                  ) : null}
+
+                  <Typography variant="h1">{temp.number ?? "-" }°C</Typography>
 
                   {temp.icon && (
                     <img
                       src={temp.icon}
                       alt="weather icon"
-                      style={{ width: "80px", height: "80px" }}
+                      style={{ width: "80px", height: "80px", marginLeft: "10px" }}
                     />
                   )}
                 </div>
 
-                <Typography variant="h6">{t(temp.description)}</Typography>
+                {temp.description && (
+                  <Typography variant="h6">{t(temp.description)}</Typography>
+                )}
 
                 <div
                   style={{
@@ -182,18 +138,13 @@ function App() {
                   }}
                 >
                   <h5>
-                    {t('max')}: {temp.max}° | {t('min')}: {temp.min}°
+                    {t("max")}: {temp.max ?? "-"}° | {t("min")}: {temp.min ?? "-"}°
                   </h5>
                 </div>
               </div>
 
-              {/* Left Side — Icon */}
               <CloudIcon
-                sx={{
-                  fontSize: 180,
-                  color: "white",
-                  opacity: 0.7,
-                }}
+                sx={{ fontSize: 180, color: "white", opacity: 0.7 }}
               />
             </div>
           </div>
@@ -207,12 +158,12 @@ function App() {
               justifyContent: "start",
             }}
           >
-            <Button variant="text" sx={{color:'white'
-            }}
-             onClick={handleLanguageClick}
-            
+            <Button
+              variant="text"
+              sx={{ color: "white" }}
+              onClick={handleLanguageClick}
             >
-             {langauge ===  'en' ? 'العربية' : 'English'}
+              {language === "en" ? "العربية" : "English"}
             </Button>
           </div>
         </div>
