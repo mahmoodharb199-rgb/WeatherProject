@@ -1,74 +1,73 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+Weather App – Real-Time Weather Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Weather App is a modern, responsive React application that provides real-time weather information for Amman (or any configured location). The app fetches live weather data from a weather API, including temperature, weather conditions, and forecasts, presenting it in a visually appealing, user-friendly interface.
 
-## Available Scripts
+🌟 Key Features
 
-In the project directory, you can run:
+Real-Time Weather Data via API
 
-### `npm start`
+Fetches current temperature, min/max values, and weather description from a weather API.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Weather icons update dynamically according to conditions.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Live Date and Time Display
 
-### `npm test`
+Updates every second using moment.js.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Supports both Arabic and English locales.
 
-### `npm run build`
+Multilingual Support
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Toggle between Arabic and English seamlessly using react-i18next.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+All labels, descriptions, and time formatting adapt to the selected language.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Responsive Design
 
-### `npm run eject`
+Optimized for mobile, tablet, and desktop screens using Material UI components.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Loading State Feedback
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Shows a circular progress indicator while fetching weather data.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Redux Integration
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Uses Redux Toolkit to manage application state and fetch API data asynchronously.
 
-## Learn More
+Custom Theming
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Material UI theme with Arabic-compatible fonts (IBM Plex Sans Arabic) for a polished appearance.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🛠 Technologies Used
 
-### Code Splitting
+React – Component-based UI library
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Redux Toolkit – State management and API handling
 
-### Analyzing the Bundle Size
+Material UI – UI components and theming
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Moment.js – Date and time formatting
 
-### Making a Progressive Web App
+React-i18next – Internationalization support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Weather API – Fetch live weather data
 
-### Advanced Configuration
+CSS3 – Styling and responsive design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+📌 How It Works
 
-### Deployment
+On load, the app fetches weather data from a weather API using Redux Toolkit.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+While fetching, a loading spinner is displayed.
 
-### `npm run build` fails to minify
+Once data is received, the temperature, weather description, min/max values, and corresponding icon are shown.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
+Users can toggle the language between Arabic and English, which updates all text and date/time formats instantly.
 
->>>>>>> 8c0b30cc69b43c179e547fbd7bb884d7960b67ff
+🎯 Project Highlights
+
+Focus on clean UI/UX with Material Design principles.
+
+Fully bi-directional layout support for RTL (Arabic) and LTR (English).
+
+Easily extendable to support multiple locations or additional weather details.
